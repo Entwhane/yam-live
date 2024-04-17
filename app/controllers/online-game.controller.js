@@ -9,9 +9,9 @@ export default function OnlineGameController() {
     const [inGame, setInGame] = useState(false);
     const [idOpponent, setIdOpponent] = useState(null);
 
-    const leftQueue = () => {
-        socket.emit("queue.leave");
-    }
+    // const leftQueue = () => {
+    //     socket.emit("queue.leave");
+    // }
 
     useEffect(() => {
         console.log('[emit][queue.join]:', socket.id);
@@ -29,9 +29,9 @@ export default function OnlineGameController() {
             setInGame(data['inGame']);
             setIdOpponent(data['idOpponent']);
         });
-        socket.on('queue.removed', (data) => {
-            navigation.navigate('HomeSreen')
-        });
+        // socket.on('queue.removed', (data) => {
+        //     navigation.navigate('HomeSreen')
+        // });
     }, []);
 
     return (
@@ -48,12 +48,13 @@ export default function OnlineGameController() {
                     <Text style={styles.paragraph}>
                         Waiting for another player...
                     </Text>
-                    <View>
+                    {/* <View>
                         <Button
                             title="Left Queue"
                             onPress={leftQueue}
                         />
                     </View>
+                     */}
                 </>
             )}
             {inGame && (

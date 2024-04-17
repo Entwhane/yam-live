@@ -29,10 +29,10 @@ const newPlayerInQueue = (socket) => {
   }
 };
 
-const leaveQueue = (socket) => {
-  queue = queue.filter(user => user.id !== socket.id);
-  socket.emit('queue.removed', {inQueue: false, inGame: false});
-};
+// const leaveQueue = (socket) => {
+//   queue = queue.filter(user => user.id !== socket.id);
+//   socket.emit('queue.removed', {inQueue: false, inGame: false});
+// };
 
 const createGame = (player1Socket, player2Socket) => {
 
@@ -61,10 +61,10 @@ io.on('connection', socket => {
     newPlayerInQueue(socket);
   });
 
-  socket.on('queue.leave', () => {
-    console.log(`[${socket.id}] player left queue `)
-    leaveQueue(socket);
-  });
+  // socket.on('queue.leave', () => {
+  //   console.log(`[${socket.id}] player left queue `)
+  //   leaveQueue(socket);
+  // });
 
   socket.on('disconnect', reason => {
     console.log(`[${socket.id}] socket disconnected - ${reason}`);
