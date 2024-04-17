@@ -14,6 +14,12 @@ let queue = [];
 // -------- GAME METHODS -----------
 // ---------------------------------
 
+const updateClientsViewTimers = (game) => {
+  // On notifie finalement les clients que les données sont mises à jour.
+  game.player1Socket.emit('game.timer', GameService.send.forPlayer.gameTimer('player:1', game.gameState));
+  game.player2Socket.emit('game.timer', GameService.send.forPlayer.gameTimer('player:2', game.gameState));
+}
+
 const newPlayerInQueue = (socket) => {
 
   queue.push(socket);
@@ -37,6 +43,7 @@ const newPlayerInQueue = (socket) => {
 const createGame = (player1Socket, player2Socket) => {
 
   const newGame = GameService.init.gameState();
+  
   newGame['idGame'] = uniqid();
   newGame['player1Socket'] = player1Socket;
   newGame['player2Socket'] = player2Socket;
@@ -45,8 +52,38 @@ const createGame = (player1Socket, player2Socket) => {
 
   const gameIndex = GameService.utils.findGameIndexById(games, newGame.idGame);
 
+  // On execute une fonction toutes les secondes (1000 ms)
+  const gameInterval = setInterval(() => {
+
+    games[gameIndex].gameState.timer--;
+
+    // Si le timer tombe à zéro
+    if (games[gameIndex].gameState.timer === 0) {
+
+      // On change de tour en inversant le clé dans 'currentTurn'
+      games[gameIndex].gameState.currentTurn = games[gameIndex].gameState.currentTurn === 'player:1' ? 'player:2' : 'player:1';
+
+      // Méthode du service qui renvoie la constante 'TURN_DURATION'
+      games[gameIndex].gameState.timer = GameService.timer.getTurnDuration();
+    }
+
+    updateClientsViewTimers(games[gameIndex])
+
+  }, 1000);
+
   games[gameIndex].player1Socket.emit('game.start', GameService.send.forPlayer.viewGameState('player:1', games[gameIndex]));
   games[gameIndex].player2Socket.emit('game.start', GameService.send.forPlayer.viewGameState('player:2', games[gameIndex]));
+
+  // On prévoit de couper l'horloge
+  // pour le moment uniquement quand le socket se déconnecte
+  player1Socket.on('disconnect', () => {
+    clearInterval(gameInterval);
+  });
+
+  player2Socket.on('disconnect', () => {
+    clearInterval(gameInterval);
+  });
+
 };
 
 // ---------------------------------------
