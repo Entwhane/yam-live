@@ -38,16 +38,17 @@ const Grid = () => {
                                 key={`${cell.id}-${cellIndex}`}
                                 style={[
                                     styles.cell,
+                                    (cellIndex + rowIndex) % 2 == 0 ? styles.greenCell : styles.beigeCell,
                                     cell.owner === "player:1" && styles.playerOwnedCell,
                                     cell.owner === "player:2" && styles.opponentOwnedCell,
                                     (cell.canBeChecked && !(cell.owner === "player:1") && !(cell.owner === "player:2")) && styles.canBeCheckedCell,
-                                    rowIndex !== 0 && styles.topBorder,
-                                    cellIndex !== 0 && styles.leftBorder,
+                                    // rowIndex !== 0 && styles.topBorder,
+                                    // cellIndex !== 0 && styles.leftBorder,
                                 ]}
                                 onPress={() => handleSelectCell(cell.id, rowIndex, cellIndex)}
                                 disabled={!cell.canBeChecked}
                             >
-                                <Text style={styles.cellText}>{cell.viewContent}</Text>
+                                <Text style={(cellIndex + rowIndex) % 2 == 0 ? styles.cellText : styles.beigeCellText}>{cell.viewContent}</Text>
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -77,11 +78,13 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "center",
         alignItems: "center",
-        borderWidth: 1,
-        borderColor: "black",
+        // borderWidth: 1,
+        // borderColor: "white",
     },
     cellText: {
-        fontSize: 11,
+        fontSize: 13,
+        fontWeight: 'bold',
+        color: '#ffffff'
     },
     playerOwnedCell: {
         backgroundColor: "lightgreen",
@@ -100,6 +103,18 @@ const styles = StyleSheet.create({
     leftBorder: {
         borderLeftWidth: 1,
     },
+    greenCell: {
+        backgroundColor: '#90AF4F'
+    },
+    beigeCell: {
+        backgroundColor: '#EDEDD1',
+        color: 'black'
+    },
+    beigeCellText: {
+        fontSize: 13,
+        fontWeight: 'bold',
+        color: '#000000'
+    }
 });
 
 export default Grid;

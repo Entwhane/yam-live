@@ -11,7 +11,7 @@ const Dice = ({ index, locked, value, onPress, opponent }) => {
 
     return (
         <TouchableOpacity
-            style={[styles.dice, locked && styles.lockedDice]}
+            style={[styles.dice, locked && value ? styles.lockedDice : styles.initDice]}
             onPress={handlePress}
             disabled={opponent}
         >
@@ -24,13 +24,16 @@ const styles = StyleSheet.create({
     dice: {
         width: 40,
         height: 40,
-        backgroundColor: "lightblue",
+        backgroundColor: "white",
         borderRadius: 5,
         justifyContent: "center",
         alignItems: "center",
     },
     lockedDice: {
         backgroundColor: "gray",
+    },
+    initDice: {
+        backgroundColor: "white",
     },
     diceText: {
         fontSize: 20,

@@ -14,7 +14,7 @@ const OpponentTimer = () => {
 
     return (
         <View style={styles.opponentTimerContainer}>
-            <Text>Timer: {opponentTimer}</Text>
+            <Text style={styles.opponentTimerText}>Temps restant : {opponentTimer}</Text>
         </View>
     );
 };
@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    opponentTimerText: {
+        color: 'white'
+    }
 });
 
 
