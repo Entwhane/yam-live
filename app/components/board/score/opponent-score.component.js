@@ -3,18 +3,18 @@ import { View, Text, StyleSheet } from 'react-native';
 import { SocketContext } from "../../../contexts/socket.context";
 
 const OpponentScore = () => {
-    // const socket = useContext(SocketContext);
-    // const [opponentScore, setOpponentScore] = useState(0);
+    const socket = useContext(SocketContext);
+    const [opponentScore, setOpponentScore] = useState(0);
 
-    // useEffect(() => {
-    //     socket.on("game.timer", (data) => {
-    //         setOpponentScore(data['opponentScore'])
-    //     });
-    // }, []);
+    useEffect(() => {
+        socket.on("game.scores", (data) => {
+            setOpponentScore(data['opponentScore'])
+        });
+    }, []);
 
     return (
         <View style={styles.opponentScoreContainer}>
-            <Text style={styles.opponentScoreText}>Score : </Text>
+            <Text style={styles.opponentScoreText}>Score : {opponentScore}</Text>
         </View>
     );
 };

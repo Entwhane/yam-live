@@ -42,6 +42,13 @@ const updateClientsViewGrid = (game) => {
   }, 200)
 }
 
+const updateClientsViewScores = (game) => {
+  setTimeout(() => {
+    game.player1Socket.emit('game.scores', GameService.send.forPlayer.scoresViewState('player:1', game.gameState))
+    game.player2Socket.emit('game.scores', GameService.send.forPlayer.scoresViewState('player:2', game.gameState))
+  }, 200)
+}
+
 const newPlayerInQueue = (socket) => {
 
   queue.push(socket);
@@ -192,7 +199,10 @@ io.on('connection', socket => {
     game.gameState.grid = GameService.grid.resetcanBeCheckedCells(game.gameState.grid);
     game.gameState.grid = GameService.grid.selectCell(data.cellId, data.rowIndex, data.cellIndex, game.gameState.currentTurn, game.gameState.grid);
 
+    
     // TODO: Ici calculer le score
+    game.gameState.player1Score = GameService.grid.checkYamMaster(game.gameState.grid).score1
+    game.gameState.player2Score = GameService.grid.checkYamMaster(game.gameState.grid).score2
     // TODO: Puis check si la partie s'arrête (lines / diagolales / no-more-gametokens)
 
     // Sinon on finit le tour
@@ -204,7 +214,8 @@ io.on('connection', socket => {
     game.gameState.choices = GameService.init.choices();
 
     // et on remet à jour la vue
-    updateClientsViewTimers(game)
+    updateClientsViewTimers(game);
+    updateClientsViewScores(game);
     updateClientsViewDecks(game);
     updateClientsViewChoices(game);
     updateClientsViewGrid(game);

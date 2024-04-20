@@ -162,7 +162,14 @@ const GameService = {
                     canSelectCells: (playerKey === gameState.currentTurn) && (gameState.choices.availableChoices.length > 0),
                     grid: gameState.grid
                 };
-            }
+            },
+            scoresViewState: (playerKey, gameState) => {
+                const choicesViewState = {
+                    playerScore: playerKey == 'player:1' ? gameState.player1Score : gameState.player2Score,
+                    opponentScore: playerKey == 'player:1' ? gameState.player2Score : gameState.player1Score
+                }
+                return choicesViewState
+            },
         }
     },
     timer: {
@@ -315,8 +322,144 @@ const GameService = {
                 updatedGrid[rowIndex][cellIndex].owner = currentTurn;
             }
             return updatedGrid;
-        }
+        },
+        valeursSimilairesSeSuivent: (line, numberOfValues) => {
+            // On donne une ligne (array) de 5 cases (horizontale, vertical ou diagonal) puis on précise la taille de la séquence
+            // à laquelle on veux trouver une correspondance (ex: 4 pions alignés)
+            for (let i = 0; i < line.length - (numberOfValues - 1); i++) {
+                let followingValues = false;
+                if (GameService.grid.checkCellOwner(line[i])) {
+                    for (let j = 1; j < numberOfValues; j++) {
+                        if (GameService.grid.checkCellOwner(line[i]) !== GameService.grid.checkCellOwner(line[i + j])) {
+                            followingValues = false
+                            break;
+                        } else {
+                            followingValues = true
+                        }
+                    }
+                }
+                if (followingValues) {
+                    return GameService.grid.checkCellOwner(line[i]);
+                }
+            }
+            return null;
+        },
+        checkCellOwner: (cell) => {
+            // Retourne l'owner d'une case
+            if (cell) {
+                return cell.owner
+            }
+            return null
+        },
+        checkYamMaster: (grid) => {
+            const rows = 5
+            const columns = 5
+            let winner = null;
+            let score1 = 0;
+            let score2 = 0;
+            //  Horizontal et vertical
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < columns; j++) {
+                    // Horizontal
+                    if (j <= columns - 5) {
+                        const horizontalSequence = grid[i].slice(j, j + 5);
 
+                        if (GameService.grid.valeursSimilairesSeSuivent(horizontalSequence, 5)) {
+                            winner = GameService.grid.valeursSimilairesSeSuivent(horizontalSequence, 5)
+                        } else if (GameService.grid.valeursSimilairesSeSuivent(horizontalSequence, 4)) {
+                            GameService.grid.valeursSimilairesSeSuivent(horizontalSequence, 4) == 'player:1' ? score1 += 2 : score2 += 2
+                        } else if (GameService.grid.valeursSimilairesSeSuivent(horizontalSequence, 3)) {
+                            GameService.grid.valeursSimilairesSeSuivent(horizontalSequence, 3) == 'player:1' ? score1 += 1 : score2 += 1
+                        }
+                    }
+
+                    // Vertical
+                    if (i <= rows - 5) {
+                        const verticalSequence = [];
+                        for (let k = i; k < i + 5; k++) {
+                            verticalSequence.push(grid[k][j]);
+                        }
+                        if (GameService.grid.valeursSimilairesSeSuivent(verticalSequence, 5)) {
+                            winner = GameService.grid.valeursSimilairesSeSuivent(verticalSequence, 5)
+                        } else if (GameService.grid.valeursSimilairesSeSuivent(verticalSequence, 4)) {
+                            GameService.grid.valeursSimilairesSeSuivent(verticalSequence, 4) == 'player:1' ? score1 += 2 : score2 += 2
+                        } else if (GameService.grid.valeursSimilairesSeSuivent(verticalSequence, 3)) {
+                            GameService.grid.valeursSimilairesSeSuivent(verticalSequence, 3) == 'player:1' ? score1 += 1 : score2 += 1
+                        }
+                    }
+                }
+            }
+
+            // Diagonale bas-gauche à haut-droite
+            for (let k = rows - 1; k >= 0; k--) {
+                const diagonalSequence = [];
+                for (let i = k, j = 0; i >= 0 && j < columns; i--, j++) {
+                    diagonalSequence.push(grid[i][j]);
+                }
+                if (diagonalSequence.length > 0) {
+                    if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 5)) {
+                        winner = GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 5)
+                    } else if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 4)) {
+                        GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 4) == 'player:1' ? score1 += 2 : score2 += 2
+                    } else if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 3)) {
+                        GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 3) == 'player:1' ? score1 += 1 : score2 += 1
+                    }
+                }
+            }
+
+            // Diagonale bas-gauche à haut-droite (sans la diagonale principale)
+            for (let k = 1; k < columns; k++) {
+                const diagonalSequence = [];
+                for (let i = rows - 1, j = k; i >= 0 && j < columns; i--, j++) {
+                    diagonalSequence.push(grid[i][j]);
+                    if (diagonalSequence.length > 0) {
+                        if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 5)) {
+                            winner = GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 5)
+                        } else if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 4)) {
+                            GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 4) == 'player:1' ? score1 += 2 : score2 += 2
+                        } else if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 3)) {
+                            GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 3) == 'player:1' ? score1 += 1 : score2 += 1
+                        }
+                    }
+                }
+            }
+
+            // Diagonales haut-gauche à bas-droite
+            for (let k = 0; k < columns; k++) {
+                const diagonalSequence = [];
+                for (let i = 0, j = k; i < rows && j < columns; i++, j++) {
+                    diagonalSequence.push(grid[i][j]);
+                }
+                if (diagonalSequence.length > 0) {
+                    if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 5)) {
+                        winner = GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 5)
+                    } else if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 4)) {
+                        GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 4) == 'player:1' ? score1 += 2 : score2 += 2
+                    } else if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 3)) {
+                        GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 3) == 'player:1' ? score1 += 1 : score2 += 1
+                    }
+                }
+            }
+
+            // Diagonales haut-gauche à bas-droite (sans la diagonale principale)
+            for (let k = 1; k < rows; k++) {
+                const diagonalSequence = [];
+                for (let i = k, j = 0; i < rows && j < columns; i++, j++) {
+                    diagonalSequence.push(grid[i][j]);
+                }
+                if (diagonalSequence.length > 0) {
+                    if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 5)) {
+                        winner = GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 5)
+                    } else if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 4)) {
+                        GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 4) == 'player:1' ? score1 += 2 : score2 += 2
+                    } else if (GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 3)) {
+                        GameService.grid.valeursSimilairesSeSuivent(diagonalSequence, 3) == 'player:1' ? score1 += 1 : score2 += 1
+                    }
+                }
+            }
+
+            return { score1, score2, winner }
+        }
     },
     utils: {
         // Return game index in global games array by id
@@ -345,7 +488,7 @@ const GameService = {
                 }
             }
             return -1;
-        }
+        },
     }
 }
 
