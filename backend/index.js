@@ -49,6 +49,20 @@ const updateClientsViewScores = (game) => {
   }, 200)
 }
 
+const updateClientsViewPawns = (game) => {
+  setTimeout(() => {
+    game.player1Socket.emit('game.pawns', GameService.send.forPlayer.pawnsViewState('player:1', game.gameState))
+    game.player2Socket.emit('game.pawns', GameService.send.forPlayer.pawnsViewState('player:2', game.gameState))
+  }, 200)
+}
+
+const updateClientsViewResult = (game) => {
+  setTimeout(() => {
+    game.player1Socket.emit('game.result', GameService.send.forPlayer.resultViewState('player:1', game.gameState))
+    game.player2Socket.emit('game.result', GameService.send.forPlayer.resultViewState('player:2', game.gameState))
+  }, 200)
+}
+
 const newPlayerInQueue = (socket) => {
 
   queue.push(socket);
@@ -63,11 +77,6 @@ const newPlayerInQueue = (socket) => {
     socket.emit('queue.added', GameService.send.forPlayer.viewQueueState());
   }
 };
-
-// const leaveQueue = (socket) => {
-//   queue = queue.filter(user => user.id !== socket.id);
-//   socket.emit('queue.removed', {inQueue: false, inGame: false});
-// };
 
 const createGame = (player1Socket, player2Socket) => {
 
@@ -101,7 +110,6 @@ const createGame = (player1Socket, player2Socket) => {
       games[gameIndex].gameState.deck = GameService.init.deck()
       games[gameIndex].gameState.choices = GameService.init.choices()
 
-
       updateClientsViewGrid(games[gameIndex])
       updateClientsViewChoices(games[gameIndex])
       updateClientsViewDecks(games[gameIndex])
@@ -117,9 +125,23 @@ const createGame = (player1Socket, player2Socket) => {
 
   updateClientsViewGrid(games[gameIndex])
   updateClientsViewDecks(games[gameIndex])
+  updateClientsViewPawns(games[gameIndex]);
 
   // On prévoit de couper l'horloge
   // pour le moment uniquement quand le socket se déconnecte
+  player1Socket.on('game.grid.selected', () => {
+    if (games[gameIndex].gameState.winner) {
+      clearInterval(gameInterval)
+    }
+  });
+
+  player2Socket.on('game.grid.selected', () => {
+    if (games[gameIndex].gameState.winner) {
+      clearInterval(gameInterval)
+    }
+  });
+
+
   player1Socket.on('disconnect', () => {
     clearInterval(gameInterval);
   });
@@ -199,11 +221,20 @@ io.on('connection', socket => {
     game.gameState.grid = GameService.grid.resetcanBeCheckedCells(game.gameState.grid);
     game.gameState.grid = GameService.grid.selectCell(data.cellId, data.rowIndex, data.cellIndex, game.gameState.currentTurn, game.gameState.grid);
 
-    
     // TODO: Ici calculer le score
-    game.gameState.player1Score = GameService.grid.checkYamMaster(game.gameState.grid).score1
-    game.gameState.player2Score = GameService.grid.checkYamMaster(game.gameState.grid).score2
+    const checkGrid = GameService.grid.checkYamMaster(game.gameState.grid)
+
+    game.gameState.player1Score = checkGrid.score1
+    game.gameState.player2Score = checkGrid.score2
     // TODO: Puis check si la partie s'arrête (lines / diagolales / no-more-gametokens)
+    game.gameState.player1Pawns = checkGrid.pawns1
+    game.gameState.player2Pawns = checkGrid.pawns2
+
+    if (checkGrid.winner) {
+      game.gameState.winner = checkGrid.winner
+      updateClientsViewResult(game);
+    }
+
 
     // Sinon on finit le tour
     game.gameState.currentTurn = game.gameState.currentTurn === 'player:1' ? 'player:2' : 'player:1';
@@ -216,6 +247,7 @@ io.on('connection', socket => {
     // et on remet à jour la vue
     updateClientsViewTimers(game);
     updateClientsViewScores(game);
+    updateClientsViewPawns(game);
     updateClientsViewDecks(game);
     updateClientsViewChoices(game);
     updateClientsViewGrid(game);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, ActivityIndicator } from "react-native";
 import { SocketContext } from '../contexts/socket.context';
 import Board from "../components/board/board.component";
 
@@ -9,10 +9,6 @@ export default function OnlineGameController() {
     const [inQueue, setInQueue] = useState(false);
     const [inGame, setInGame] = useState(false);
     const [idOpponent, setIdOpponent] = useState(null);
-
-    // const leftQueue = () => {
-    //     socket.emit("queue.leave");
-    // }
 
     useEffect(() => {
         console.log('[emit][queue.join]:', socket.id);
@@ -30,9 +26,6 @@ export default function OnlineGameController() {
             setInGame(data['inGame']);
             setIdOpponent(data['idOpponent']);
         });
-        // socket.on('queue.removed', (data) => {
-        //     navigation.navigate('HomeSreen')
-        // });
     }, []);
 
     return (
@@ -46,21 +39,15 @@ export default function OnlineGameController() {
             )}
             {inQueue && (
                 <>
+                    <ActivityIndicator size="large" color="#80B64B" />
                     <Text style={styles.paragraph}>
-                        Waiting for another player...
+                        En attente d'un joueur...
                     </Text>
-                    {/* <View>
-                        <Button
-                            title="Left Queue"
-                            onPress={leftQueue}
-                        />
-                    </View>
-                     */}
                 </>
             )}
             {inGame && (
                 <>
-                    <Board/>
+                    <Board />
                 </>
             )}
         </View>
@@ -70,7 +57,7 @@ export default function OnlineGameController() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#302E2B",
         alignItems: "center",
         justifyContent: "center",
         width: '100%',
@@ -78,5 +65,8 @@ const styles = StyleSheet.create({
     },
     paragraph: {
         fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white',
+        marginVertical: 30
     }
 });

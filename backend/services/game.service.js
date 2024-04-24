@@ -42,6 +42,9 @@ const GAME_INIT = {
         timer: null,
         player1Score: 0,
         player2Score: 0,
+        player1Pawns: 12,
+        player2Pawns: 12,
+        winner: null,
         grid: [],
         choices: {},
         deck: {}
@@ -96,7 +99,6 @@ const GameService = {
             game['gameState']['grid'] = [...GRID_INIT];
             return game;
         },
-
         deck: () => {
             return { ...DECK_INIT };
         },
@@ -138,6 +140,7 @@ const GameService = {
             },
             deckViewState: (playerKey, gameState) => {
                 const deckViewState = {
+                    displayDecks: !gameState.winner,
                     displayPlayerDeck: gameState.currentTurn === playerKey,
                     displayOpponentDeck: gameState.currentTurn !== playerKey,
                     rollsCounter: gameState.deck.rollsCounter,
@@ -164,11 +167,31 @@ const GameService = {
                 };
             },
             scoresViewState: (playerKey, gameState) => {
-                const choicesViewState = {
+                const scoresViewState = {
                     playerScore: playerKey == 'player:1' ? gameState.player1Score : gameState.player2Score,
                     opponentScore: playerKey == 'player:1' ? gameState.player2Score : gameState.player1Score
                 }
-                return choicesViewState
+                return scoresViewState
+            },
+            pawnsViewState: (playerKey, gameState) => {
+                const pawnsViewState = {
+                    playerPawns: playerKey == 'player:1' ? gameState.player1Pawns : gameState.player2Pawns,
+                    opponentPawns: playerKey == 'player:1' ? gameState.player2Pawns : gameState.player1Pawns
+                }
+                return pawnsViewState
+            },
+            resultViewState: (playerKey, gameState) => {
+                let gameResult = null
+                if (playerKey === gameState.winner) {
+                    gameResult = "Victoire"
+                } else if (playerKey !== gameState.winner) {
+                    gameResult = "Défaite"
+                } else {
+                    gameResult = "Égalité"
+                }
+
+                return { gameResult: gameResult }
+
             },
         }
     },
@@ -308,7 +331,7 @@ const GameService = {
             const updatedGrid = grid.map(row =>
                 row.map(cell => ({
                     ...cell,
-                    canBeChecked: cell.id === idSelectedChoice ? true : false
+                    canBeChecked: cell.id === idSelectedChoice && !cell.owner ? true : false
                 }))
             );
             return updatedGrid;
@@ -357,6 +380,8 @@ const GameService = {
             let winner = null;
             let score1 = 0;
             let score2 = 0;
+            let pawns1 = 12;
+            let pawns2 = 12;
             //  Horizontal et vertical
             for (let i = 0; i < rows; i++) {
                 for (let j = 0; j < columns; j++) {
@@ -386,6 +411,12 @@ const GameService = {
                         } else if (GameService.grid.valeursSimilairesSeSuivent(verticalSequence, 3)) {
                             GameService.grid.valeursSimilairesSeSuivent(verticalSequence, 3) == 'player:1' ? score1 += 1 : score2 += 1
                         }
+                    }
+                    // Nombre de point
+                    if (GameService.grid.checkCellOwner(grid[i][j]) == 'player:1') {
+                        pawns1--
+                    } else if (GameService.grid.checkCellOwner(grid[i][j]) == 'player:2') {
+                        pawns2--
                     }
                 }
             }
@@ -458,7 +489,17 @@ const GameService = {
                 }
             }
 
-            return { score1, score2, winner }
+            if (pawns1 == 0 || pawns2 == 0) {
+                if (score1 > score2) {
+                    winner == 'player:1'
+                } else if (score1 > score2) {
+                    winner == 'player:2'
+                } else {
+                    winner = 'tie'
+                }
+            }
+
+            return { score1, score2, pawns1, pawns2, winner }
         }
     },
     utils: {

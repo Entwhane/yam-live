@@ -6,32 +6,36 @@ import Dice from "./dice.component";
 const OpponentDeck = () => {
     const socket = useContext(SocketContext);
     const [displayOpponentDeck, setDisplayOpponentDeck] = useState(false);
+    const [displayDeck, setDisplayDeck] = useState(false);
     const [opponentDices, setOpponentDices] = useState(Array(5).fill({ value: "", locked: false }));
 
     useEffect(() => {
         socket.on("game.deck.view-state", (data) => {
             setDisplayOpponentDeck(data['displayOpponentDeck']);
-            if (data['displayOpponentDeck']) {
+            setDisplayDeck(data['displayDecks']);
+            if (data['displayOpponentDeck'] && data['displayDecks']) {
                 setOpponentDices(data['dices']);
             }
         });
     }, []);
 
     return (
-        <View style={styles.deckOpponentContainer}>
-            {displayOpponentDeck && (
-                <View style={styles.diceContainer}>
-                    {opponentDices.map((diceData, index) => (
-                        <Dice
-                            key={index}
-                            locked={diceData.locked}
-                            value={diceData.value}
-                            opponent={true}
-                        />
-                    ))}
+        <>
+            {displayOpponentDeck && displayDeck && (
+                <View style={styles.deckOpponentContainer}>
+                    <View style={styles.diceContainer}>
+                        {opponentDices.map((diceData, index) => (
+                            <Dice
+                                key={index}
+                                locked={diceData.locked}
+                                value={diceData.value}
+                                opponent={true}
+                            />
+                        ))}
+                    </View>
                 </View>
             )}
-        </View>
+        </>
     );
 };
 

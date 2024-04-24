@@ -7,6 +7,7 @@ const PlayerDeck = () => {
 
     const socket = useContext(SocketContext);
     const [displayPlayerDeck, setDisplayPlayerDeck] = useState(false);
+    const [displayDeck, setDisplayDeck] = useState(false);
     const [dices, setDices] = useState(Array(5).fill(false));
     const [displayRollButton, setDisplayRollButton] = useState(false);
     const [rollsCounter, setRollsCounter] = useState(0);
@@ -16,7 +17,8 @@ const PlayerDeck = () => {
 
         socket.on("game.deck.view-state", (data) => {
             setDisplayPlayerDeck(data['displayPlayerDeck']);
-            if (data['displayPlayerDeck']) {
+            setDisplayDeck(data['displayDecks']);
+            if (data['displayPlayerDeck'] && data['displayDecks']) {
                 setDisplayRollButton(data['displayRollButton']);
                 setRollsCounter(data['rollsCounter']);
                 setRollsMaximum(data['rollsMaximum']);
@@ -39,43 +41,43 @@ const PlayerDeck = () => {
     };
 
     return (
-        <View style={styles.deckPlayerContainer}>
-            {displayPlayerDeck && (
-                <>
-                    {displayRollButton && (
-                        <>
-                            <View style={styles.rollInfoContainer}>
-                                <Text style={styles.rollInfoText}>
-                                    Lancer {rollsCounter} / {rollsMaximum}
-                                </Text>
-                            </View>
-                        </>
-                    )}
+        <>
+            {displayPlayerDeck && displayDeck && (
+                <View style={styles.deckPlayerContainer}>
+                    <>
+                        {displayRollButton && (
+                            <>
+                                <View style={styles.rollInfoContainer}>
+                                    <Text style={styles.rollInfoText}>
+                                        Lancer {rollsCounter} / {rollsMaximum}
+                                    </Text>
+                                </View>
+                            </>
+                        )}
 
-                    <View style={styles.diceContainer}>
-                        {dices.map((diceData, index) => (
-                            <Dice
-                                key={diceData.id}
-                                index={index}
-                                locked={diceData.locked}
-                                value={diceData.value}
-                                onPress={toggleDiceLock}
-                            />
-                        ))}
-                    </View>
+                        <View style={styles.diceContainer}>
+                            {dices.map((diceData, index) => (
+                                <Dice
+                                    key={diceData.id}
+                                    index={index}
+                                    locked={diceData.locked}
+                                    value={diceData.value}
+                                    onPress={toggleDiceLock}
+                                />
+                            ))}
+                        </View>
 
-                    {displayRollButton && (
-                        <>
-                            <TouchableOpacity style={styles.rollButton} onPress={rollDices}>
-                                <Text style={styles.rollButtonText}>Lancer les dés</Text>
-                            </TouchableOpacity>
-                        </>
-
-                    )}
-                </>
+                        {displayRollButton && (
+                            <>
+                                <TouchableOpacity style={styles.rollButton} onPress={rollDices}>
+                                    <Text style={styles.rollButtonText}>Lancer les dés</Text>
+                                </TouchableOpacity>
+                            </>
+                        )}
+                    </>
+                </View>
             )}
-
-        </View>
+        </>
     );
 };
 

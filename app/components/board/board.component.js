@@ -10,31 +10,37 @@ import PlayerScore from "./score/player-score.component";
 import OpponentScore from "./score/opponent-score.component";
 import PlayerInfos from "./infos/player-infos.component";
 import OpponentInfos from "./infos/opponent-infos.component";
+import PlayerPawns from "./pawn/player-pawn.component";
+import OpponentPawns from "./pawn/opponent-pawn.component";
+import Result from "./result/result.component";
 
 const Board = ({ gameViewState }) => {
     return (
         <View style={styles.container}>
-            <View style={[styles.row, { height: '5%' }]}>
+            <View style={[styles.row, { height: '10%' }]}>
                 <OpponentInfos />
                 <View style={styles.opponentTimerScoreContainer}>
                     <OpponentTimer />
+                    <OpponentPawns />
                     <OpponentScore />
                 </View>
             </View>
-            <View style={[styles.row, { height: '25%' }]}>
+            <View style={[styles.row, { height: '20%' }]}>
                 <OpponentDeck />
             </View>
             <View style={[styles.row, styles.gridContainer, { height: '40%' }]}>
                 <Grid />
                 <Choices />
             </View>
-            <View style={[styles.row, { height: '25%' }]}>
+            <View style={[styles.row, { height: '20%' }]}>
                 <PlayerDeck />
+                <Result />
             </View>
-            <View style={[styles.row, { height: '5%' }]}>
+            <View style={[styles.row, { height: '10%' }]}>
                 <PlayerInfos />
                 <View style={styles.playerTimerScoreContainer}>
                     <PlayerTimer />
+                    <PlayerPawns />
                     <PlayerScore />
                 </View>
             </View>

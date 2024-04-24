@@ -27,7 +27,7 @@ export default function OnlineGameScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#302E2B",
         alignItems: "center",
         justifyContent: "center",
     }

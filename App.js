@@ -17,8 +17,18 @@ function App() {
   return (
     <SocketContext.Provider value={socket}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="HomeScreen">
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Navigator
+          initialRouteName="HomeScreen"
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#302E2B',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}>
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="OnlineGameScreen" component={OnlineGameScreen} />
           <Stack.Screen name="VsBotGameScreen" component={VsBotGameScreen} />
         </Stack.Navigator>
