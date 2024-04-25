@@ -9,12 +9,12 @@ const CHOICES_INIT = {
 };
 
 const ALL_COMBINATIONS = [
-    { value: 'Brelan1', id: 'brelan1' },
-    { value: 'Brelan2', id: 'brelan2' },
-    { value: 'Brelan3', id: 'brelan3' },
-    { value: 'Brelan4', id: 'brelan4' },
-    { value: 'Brelan5', id: 'brelan5' },
-    { value: 'Brelan6', id: 'brelan6' },
+    { value: '1', id: 'brelan1' },
+    { value: '2', id: 'brelan2' },
+    { value: '3', id: 'brelan3' },
+    { value: '4', id: 'brelan4' },
+    { value: '5', id: 'brelan5' },
+    { value: '6', id: 'brelan6' },
     { value: 'Full', id: 'full' },
     { value: 'Carré', id: 'carre' },
     { value: 'Yam', id: 'yam' },

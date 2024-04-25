@@ -123,9 +123,9 @@ const createGame = (player1Socket, player2Socket) => {
   games[gameIndex].player1Socket.emit('game.start', GameService.send.forPlayer.viewGameState('player:1', games[gameIndex]));
   games[gameIndex].player2Socket.emit('game.start', GameService.send.forPlayer.viewGameState('player:2', games[gameIndex]));
 
+  updateClientsViewPawns(games[gameIndex]);
   updateClientsViewGrid(games[gameIndex])
   updateClientsViewDecks(games[gameIndex])
-  updateClientsViewPawns(games[gameIndex]);
 
   // On prévoit de couper l'horloge
   // pour le moment uniquement quand le socket se déconnecte

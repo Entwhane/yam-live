@@ -36,19 +36,19 @@ const Grid = () => {
                         {row.map((cell, cellIndex) => (
                             <TouchableOpacity
                                 key={`${cell.id}-${cellIndex}`}
-                                style={[
-                                    styles.cell,
+                                style={styles.cell}
+                                onPress={() => handleSelectCell(cell.id, rowIndex, cellIndex)}
+                                disabled={!cell.canBeChecked}
+                            >
+                                <View style={[
+                                    styles.insideCell,
                                     (cellIndex + rowIndex) % 2 == 0 ? styles.greenCell : styles.beigeCell,
                                     cell.owner === "player:1" && styles.playerOwnedCell,
                                     cell.owner === "player:2" && styles.opponentOwnedCell,
                                     (cell.canBeChecked && !(cell.owner === "player:1") && !(cell.owner === "player:2")) && styles.canBeCheckedCell,
-                                    // rowIndex !== 0 && styles.topBorder,
-                                    // cellIndex !== 0 && styles.leftBorder,
-                                ]}
-                                onPress={() => handleSelectCell(cell.id, rowIndex, cellIndex)}
-                                disabled={!cell.canBeChecked}
-                            >
-                                <Text style={(cellIndex + rowIndex) % 2 == 0 ? styles.cellText : styles.beigeCellText}>{cell.viewContent}</Text>
+                                ]}>
+                                    <Text style={(cellIndex + rowIndex) % 2 == 0 ? styles.cellText : styles.beigeCellText}>{cell.viewContent}</Text>
+                                </View>
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -59,10 +59,11 @@ const Grid = () => {
 
 const styles = StyleSheet.create({
     gridContainer: {
-        flex: 7,
+        flex: 5,
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        paddingRight: 20
     },
     row: {
         flexDirection: "row",
@@ -78,8 +79,12 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "center",
         alignItems: "center",
-        // borderWidth: 1,
-        // borderColor: "white",
+    },
+    insideCell: {
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
     },
     cellText: {
         fontSize: 13,
@@ -95,7 +100,8 @@ const styles = StyleSheet.create({
         opacity: 0.9,
     },
     canBeCheckedCell: {
-        backgroundColor: "lightyellow",
+        width: "90%",
+        height: "90%",
     },
     topBorder: {
         borderTopWidth: 1,

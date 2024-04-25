@@ -22,8 +22,8 @@ const Dice = ({ index, locked, value, onPress, opponent }) => {
 
 const styles = StyleSheet.create({
     dice: {
-        width: 40,
-        height: 40,
+        width: 35,
+        height: 35,
         backgroundColor: "white",
         borderRadius: 5,
         justifyContent: "center",

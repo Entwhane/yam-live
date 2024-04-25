@@ -9,6 +9,16 @@ const Choices = () => {
     const [idSelectedChoice, setIdSelectedChoice] = useState(null);
     const [availableChoices, setAvailableChoices] = useState([]);
 
+    const MAP_CHOICES = {
+        '': '',
+        '': '',
+        '': '',
+        '': '',
+        '': '',
+        '': '',
+        '': '',
+    }
+
     useEffect(() => {
 
         socket.on("game.choices.view-state", (data) => {
@@ -21,12 +31,10 @@ const Choices = () => {
     }, []);
 
     const handleSelectChoice = (choiceId) => {
-
         if (canMakeChoice) {
             setIdSelectedChoice(choiceId);
             socket.emit("game.choices.selected", { choiceId });
         }
-
     };
 
     return (
@@ -43,7 +51,7 @@ const Choices = () => {
                         onPress={() => handleSelectChoice(choice.id)}
                         disabled={!canMakeChoice}
                     >
-                        <Text style={styles.choiceText}>{choice.value}</Text>
+                        <Text style={idSelectedChoice === choice.id ? styles.selectedChoiceText : styles.choiceText}>{choice.value}</Text>
                     </TouchableOpacity>
                 ))}
         </View>
@@ -53,13 +61,11 @@ const Choices = () => {
 const styles = StyleSheet.create({
     choicesContainer: {
         flex: 1,
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
-        paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        borderColor: "black",
-        backgroundColor: "lightgrey"
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#262522",
+        borderRadius: 5
     },
     choiceButton: {
         backgroundColor: "white",
@@ -67,11 +73,16 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         alignItems: "center",
         justifyContent: "center",
-        width: "100%",
+        width: "85%",
         height: "10%"
     },
     selectedChoice: {
-        backgroundColor: "lightgreen",
+        backgroundColor: "#90AF4F",
+    },
+    selectedChoiceText: {
+        color: 'white',
+        fontSize: 13,
+        fontWeight: "bold",
     },
     choiceText: {
         fontSize: 13,

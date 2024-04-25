@@ -106,14 +106,14 @@ const styles = StyleSheet.create({
     rollButton: {
         width: "40%",
         backgroundColor: "green",
-        paddingVertical: 10,
+        paddingVertical: 5,
         borderRadius: 5,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#90AF4F"
     },
     rollButtonText: {
-        fontSize: 18,
+        fontSize: 16,
         color: "white",
         fontWeight: "bold",
     },

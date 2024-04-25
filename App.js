@@ -22,6 +22,9 @@ function App() {
           screenOptions={{
             headerStyle: {
               backgroundColor: '#302E2B',
+              elevation: 0,
+              shadowOpacity: 0,
+              borderBottomWidth: 0,
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -29,7 +32,7 @@ function App() {
             },
           }}>
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="OnlineGameScreen" component={OnlineGameScreen} />
+          <Stack.Screen name="OnlineGameScreen" component={OnlineGameScreen} options={{title: 'Retour' }} />
           <Stack.Screen name="VsBotGameScreen" component={VsBotGameScreen} />
         </Stack.Navigator>
       </NavigationContainer>

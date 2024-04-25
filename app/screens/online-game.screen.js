@@ -10,7 +10,7 @@ export default function OnlineGameScreen({ navigation }) {
             {!socket && (
                 <>
                     <Text style={styles.paragraph}>
-                        No connection with server...
+                        Connexion impossible avec le serveur...
                     </Text>
                     <Text style={styles.footnote}>
                         Restart the app and wait for the server to be back again.

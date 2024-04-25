@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 const Result = () => {
     const socket = useContext(SocketContext);
     const navigation = useNavigation();
-    const [result, setResult] = useState(0);
+    const [result, setResult] = useState(null);
 
     useEffect(() => {
         socket.on("game.result", (data) => {

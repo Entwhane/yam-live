@@ -14,7 +14,7 @@ export default function HomeScreen({ navigation }) {
                     alignItems: "center",
                     justifyContent: "center",
                 }}>
-                    <Text style={styles.test}>Play Yam Master Online on the #1 Site!</Text>
+                    <Text style={styles.title}>Play Yam Master Online on the #1 Site!</Text>
                 </View>
                 <View style={{ width: '80%' }}>
                     <TouchableOpacity style={styles.onlineButton} onPress={() => navigation.navigate('OnlineGameScreen')}>
@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#80B64B",
     },
     botButton: {
-        backgroundColor: "green",
         paddingVertical: 10,
         marginVertical: 25,
         borderRadius: 5,
@@ -97,11 +96,11 @@ const styles = StyleSheet.create({
         color: "white",
         padding: 2
     },
-    test: {
+    title: {
         color: "white",
         fontSize: 36,
-        fontWeight: 700,
-        padding: 0,
+        fontWeight: "bold",
+        paddingBottom: 50,
         textAlign: 'center'
     },
     stretch: {

@@ -25,14 +25,14 @@ const Board = ({ gameViewState }) => {
                     <OpponentScore />
                 </View>
             </View>
-            <View style={[styles.row, { height: '20%' }]}>
+            <View style={[styles.row, { height: '22%' }]}>
                 <OpponentDeck />
             </View>
-            <View style={[styles.row, styles.gridContainer, { height: '40%' }]}>
+            <View style={[styles.row, styles.gridContainer, { height: '36%' }]}>
                 <Grid />
                 <Choices />
             </View>
-            <View style={[styles.row, { height: '20%' }]}>
+            <View style={[styles.row, { height: '22%' }]}>
                 <PlayerDeck />
                 <Result />
             </View>
@@ -63,17 +63,17 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     opponentTimerScoreContainer: {
-        flex: 3,
+        flex: 4,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: "#1D1B1A"
     },
     gridContainer: {
-
+        paddingHorizontal: 20
     },
     playerTimerScoreContainer: {
-        flex: 3,
+        flex: 4,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, ActivityIndicator } from "react-native"
 import { SocketContext } from '../contexts/socket.context';
 import Board from "../components/board/board.component";
 
-export default function OnlineGameController() {
+export default function BotGameController() {
 
     const socket = useContext(SocketContext);
     const [inQueue, setInQueue] = useState(false);
