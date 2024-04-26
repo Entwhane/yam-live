@@ -11,18 +11,11 @@ export default function BotGameController() {
     const [idOpponent, setIdOpponent] = useState(null);
 
     useEffect(() => {
-        console.log('[emit][queue.join]:', socket.id);
-        socket.emit("queue.join");
-        setInQueue(false);
+        console.log('[emit][bot.join]:', socket.id);
         setInGame(false);
-        socket.on('queue.added', (data) => {
-            console.log('[listen][queue.added]:', data);
-            setInQueue(data['inQueue']);
-            setInGame(data['inGame']);
-        });
+        socket.emit("bot.join");
         socket.on('game.start', (data) => {
             console.log('[listen][game.start]:', data);
-            setInQueue(data['inQueue']);
             setInGame(data['inGame']);
             setIdOpponent(data['idOpponent']);
         });
@@ -30,24 +23,17 @@ export default function BotGameController() {
 
     return (
         <View style={styles.container}>
-            {!inQueue && !inGame && (
+            {!inGame && (
                 <>
                     <Text style={styles.paragraph}>
                         Waiting for server datas...
                     </Text>
                 </>
             )}
-            {inQueue && (
-                <>
-                    <ActivityIndicator size="large" color="#80B64B" />
-                    <Text style={styles.paragraph}>
-                        En attente d'un joueur...
-                    </Text>
-                </>
-            )}
+
             {inGame && (
                 <>
-                    <Board />
+                    <Board bot={true}/>
                 </>
             )}
         </View>

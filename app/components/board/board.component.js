@@ -14,7 +14,9 @@ import PlayerPawns from "./pawn/player-pawn.component";
 import OpponentPawns from "./pawn/opponent-pawn.component";
 import Result from "./result/result.component";
 
-const Board = ({ gameViewState }) => {
+const Board = (props) => {
+    const { bot } = props
+
     return (
         <View style={styles.container}>
             <View style={[styles.row, { height: '10%' }]}>
@@ -29,11 +31,11 @@ const Board = ({ gameViewState }) => {
                 <OpponentDeck />
             </View>
             <View style={[styles.row, styles.gridContainer, { height: '36%' }]}>
-                <Grid />
-                <Choices />
+                <Grid bot={bot}/>
+                <Choices bot={bot}/>
             </View>
             <View style={[styles.row, { height: '22%' }]}>
-                <PlayerDeck />
+                <PlayerDeck bot={bot}/>
                 <Result />
             </View>
             <View style={[styles.row, { height: '10%' }]}>

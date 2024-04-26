@@ -2,10 +2,10 @@ import React, { useEffect, useContext, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SocketContext } from "../../../contexts/socket.context";
 
-const Grid = () => {
+const Grid = (props) => {
 
+    const { bot } = props
     const socket = useContext(SocketContext);
-
     const [displayGrid, setDisplayGrid] = useState(true);
     const [canSelectCells, setCanSelectCells] = useState([]);
     const [grid, setGrid] = useState(
@@ -16,7 +16,7 @@ const Grid = () => {
 
     const handleSelectCell = (cellId, rowIndex, cellIndex) => {
         if (canSelectCells) {
-            socket.emit("game.grid.selected", { cellId, rowIndex, cellIndex });
+            socket.emit("game.grid.selected", { cellId, rowIndex, cellIndex }, bot);
         }
     };
 

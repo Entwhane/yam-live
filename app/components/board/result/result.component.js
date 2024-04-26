@@ -21,7 +21,7 @@ const Result = () => {
                     <Text style={styles.resultText}>{result}</Text>
                     <Button
                         title="Rejouer"
-                        onPress={() => navigation.navigate('OnlineGameScreen')}
+                        onPress={() => navigation.navigate('HomeScreen')}
                     />
                 </View>
             )}

@@ -53,28 +53,28 @@ const GAME_INIT = {
 
 const GRID_INIT = [
     [
-        { viewContent: '1', id: 'brelan1', owner: null, canBeChecked: false },
+        { viewContent: '1', id: 'brelan1', owner: 'player:1', canBeChecked: false },
         { viewContent: '3', id: 'brelan3', owner: null, canBeChecked: false },
         { viewContent: 'Défi', id: 'defi', owner: null, canBeChecked: false },
         { viewContent: '4', id: 'brelan4', owner: null, canBeChecked: false },
         { viewContent: '6', id: 'brelan6', owner: null, canBeChecked: false },
     ],
     [
-        { viewContent: '2', id: 'brelan2', owner: null, canBeChecked: false },
+        { viewContent: '2', id: 'brelan2', owner: 'player:1', canBeChecked: false },
         { viewContent: 'Carré', id: 'carre', owner: null, canBeChecked: false },
         { viewContent: 'Sec', id: 'sec', owner: null, canBeChecked: false },
         { viewContent: 'Full', id: 'full', owner: null, canBeChecked: false },
         { viewContent: '5', id: 'brelan5', owner: null, canBeChecked: false },
     ],
     [
-        { viewContent: '≤8', id: 'moinshuit', owner: null, canBeChecked: false },
+        { viewContent: '≤8', id: 'moinshuit', owner: 'player:1', canBeChecked: false },
         { viewContent: 'Full', id: 'full', owner: null, canBeChecked: false },
         { viewContent: 'Yam', id: 'yam', owner: null, canBeChecked: false },
         { viewContent: 'Défi', id: 'defi', owner: null, canBeChecked: false },
         { viewContent: 'Suite', id: 'suite', owner: null, canBeChecked: false },
     ],
     [
-        { viewContent: '6', id: 'brelan6', owner: null, canBeChecked: false },
+        { viewContent: '6', id: 'brelan6', owner: 'player:1', canBeChecked: false },
         { viewContent: 'Sec', id: 'sec', owner: null, canBeChecked: false },
         { viewContent: 'Suite', id: 'suite', owner: null, canBeChecked: false },
         { viewContent: '≤8', id: 'moinshuit', owner: null, canBeChecked: false },
@@ -93,6 +93,7 @@ const GameService = {
     init: {
         gameState: () => {
             const game = { ...GAME_INIT };
+            // console.log(game);
             game['gameState']['timer'] = TURN_DURATION;
             game['gameState']['deck'] = { ...DECK_INIT };
             game['gameState']['choices'] = { ...CHOICES_INIT };
@@ -112,7 +113,7 @@ const GameService = {
     send: {
         forPlayer: {
             // Return conditionnaly gameState custom objet for player views
-            viewGameState: (playerKey, game) => {
+            viewGameState: (playerKey, game, isBot) => {
                 return {
                     inQueue: false,
                     inGame: true,
@@ -121,9 +122,10 @@ const GameService = {
                             ? game.player1Socket.id
                             : game.player2Socket.id,
                     idOpponent:
-                        (playerKey === 'player:1')
-                            ? game.player2Socket.id
-                            : game.player1Socket.id
+                        isBot ? null :
+                            (playerKey === 'player:1')
+                                ? game.player2Socket.id
+                                : game.player1Socket.id
                 };
             },
             viewQueueState: () => {
@@ -530,6 +532,19 @@ const GameService = {
             }
             return -1;
         },
+        findElementIndex: (grid, idToFind) => {
+            const choices = []
+            for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
+                const row = grid[rowIndex];
+                for (let colIndex = 0; colIndex < row.length; colIndex++) {
+                    const element = row[colIndex];
+                    if (element.id === idToFind && element.canBeChecked === true) {
+                        choices.push({ rowIndex: rowIndex, colIndex: colIndex })
+                    }
+                }
+            }
+            return choices;
+        }
     }
 }
 

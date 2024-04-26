@@ -3,8 +3,9 @@ import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { SocketContext } from "../../../contexts/socket.context";
 import Dice from "./dice.component";
 
-const PlayerDeck = () => {
-
+const PlayerDeck = (props) => {
+    
+    const { bot } = props
     const socket = useContext(SocketContext);
     const [displayPlayerDeck, setDisplayPlayerDeck] = useState(false);
     const [displayDeck, setDisplayDeck] = useState(false);
@@ -30,13 +31,13 @@ const PlayerDeck = () => {
     const toggleDiceLock = (index) => {
         const newDices = [...dices];
         if (newDices[index].value !== '' && displayRollButton) {
-            socket.emit("game.dices.lock", newDices[index].id);
+            socket.emit("game.dices.lock", newDices[index].id, bot);
         }
     };
 
     const rollDices = () => {
         if (rollsCounter <= rollsMaximum) {
-            socket.emit("game.dices.roll");
+            socket.emit("game.dices.roll", bot);
         }
     };
 
@@ -58,7 +59,8 @@ const PlayerDeck = () => {
                         <View style={styles.diceContainer}>
                             {dices.map((diceData, index) => (
                                 <Dice
-                                    key={diceData.id}
+                                    bot={bot}
+                                    key={`diceData.id-${index}`}
                                     index={index}
                                     locked={diceData.locked}
                                     value={diceData.value}

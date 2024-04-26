@@ -2,7 +2,9 @@ import React, { useState, useContext, useEffect } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { SocketContext } from "../../../contexts/socket.context";
 
-const Choices = () => {
+const Choices = (props) => {
+    
+    const { bot } = props
     const socket = useContext(SocketContext);
     const [displayChoices, setDisplayChoices] = useState(false);
     const [canMakeChoice, setCanMakeChoice] = useState(false);
@@ -33,7 +35,7 @@ const Choices = () => {
     const handleSelectChoice = (choiceId) => {
         if (canMakeChoice) {
             setIdSelectedChoice(choiceId);
-            socket.emit("game.choices.selected", { choiceId });
+            socket.emit("game.choices.selected", { choiceId }, bot);
         }
     };
 
