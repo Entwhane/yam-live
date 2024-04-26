@@ -317,7 +317,7 @@ const createBotGame = (playerSocket) => {
         similarIds.forEach((idDice) => {
           lockDice(game, idDice, botGame);
         })
-      }, 500)
+      }, 1000)
 
       if (randomChoice) {
         setTimeout(() => {
@@ -334,9 +334,9 @@ const createBotGame = (playerSocket) => {
 
               selectGrid(game, data, botGame)
             }
-          }, 2000);
+          }, 1500);
           selectChoice(game, randomChoice.id, botGame)
-        }, 2000);
+        }, 1500);
       }
     }
   }, 5000);
