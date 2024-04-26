@@ -98,6 +98,9 @@ const GameService = {
             game['gameState']['deck'] = { ...DECK_INIT };
             game['gameState']['choices'] = { ...CHOICES_INIT };
             game['gameState']['grid'] = [...GRID_INIT];
+            game['gameState']['player1Pawns'] = 12;
+            game['gameState']['player2Pawns'] = 12;
+            game['gameState']['winner'] = null;
             return game;
         },
         deck: () => {
@@ -493,9 +496,9 @@ const GameService = {
 
             if (pawns1 == 0 || pawns2 == 0) {
                 if (score1 > score2) {
-                    winner == 'player:1'
+                    winner = 'player:1'
                 } else if (score1 > score2) {
-                    winner == 'player:2'
+                    winner = 'player:2'
                 } else {
                     winner = 'tie'
                 }
@@ -544,6 +547,22 @@ const GameService = {
                 }
             }
             return choices;
+        },
+        findSimilarDiceIds: (dices) => {
+            const dicesWithSimilarValue = [];
+            dices.forEach((dice) => {
+                const valueToSearch = dice.value;
+                for (let i = 0; i < dices.length; i++) {
+                    if (dices[i] !== dice) {
+                        if (dices[i].value === valueToSearch) {
+                            if (!dicesWithSimilarValue.includes(arrdices[i].id)) {
+                                dicesWithSimilarValue.push(dices[i].id);
+                            }
+                        }
+                    }
+                }
+            });
+            return dicesWithSimilarValue;
         }
     }
 }

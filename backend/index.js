@@ -106,7 +106,11 @@ const rollDices = (game, botGame) => {
 
 const lockDice = (game, idDice, botGame) => {
   const indexDice = GameService.utils.findDiceIndexByDiceId(game.gameState.deck.dices, idDice)
-  game.gameState.deck.dices[indexDice].locked = game.gameState.deck.dices[indexDice].locked === true ? false : true
+  if (botGame) {
+    game.gameState.deck.dices[indexDice].locked = true
+  } else {
+    game.gameState.deck.dices[indexDice].locked = game.gameState.deck.dices[indexDice].locked === true ? false : true
+  }
   updateClientsViewDecks(game, botGame)
 }
 
@@ -294,17 +298,18 @@ const createBotGame = (playerSocket) => {
 
   const botInterval = setInterval(() => {
     if (games[gameIndex].gameState.currentTurn == 'player:2' && games[gameIndex].gameState.deck.rollsCounter <= games[gameIndex].gameState.deck.rollsMaximum) {
-      // Roll dice every 5 seconds
-      rollDices(games[gameIndex], true);
-      // Lock dice 1 and 3 after 2 seconds
-      // setTimeout(() => {
-      //   lockDice(games[gameIndex], 1, true);
-      //   lockDice(games[gameIndex], 3, true);
-      // }, 2000);
 
-      // Bot effectue une action aléatoire parmi les choix disponibles
+      rollDices(games[gameIndex], true);
+
       const choices = GameService.choices.findCombinations(games[gameIndex].gameState.deck.dices, false, games[gameIndex].gameState.deck.rollsCounter === 2);
       const randomChoice = choices[Math.floor(Math.random() * choices.length)];
+      
+      setTimeout(() => {
+        const similarIds = GameService.utils.findSimilarDiceIds(games[gameIndex].gameState.deck.dices)
+        similarIds.forEach((idDice) => {
+          lockDice(games[gameIndex], idDice, true);
+        })
+      }, 500)
 
       if (randomChoice) {
         setTimeout(() => {
@@ -318,13 +323,12 @@ const createBotGame = (playerSocket) => {
                 rowIndex: randomGridChoice.rowIndex,
                 cellIndex: randomGridChoice.colIndex
               }
-  
+
               selectGrid(games[gameIndex], data, true)
             }
           }, 2000);
           selectChoice(games[gameIndex], randomChoice.id, true)
         }, 2000);
-
       }
     }
   }, 5000);
