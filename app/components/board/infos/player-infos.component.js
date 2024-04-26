@@ -3,15 +3,6 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { SocketContext } from "../../../contexts/socket.context";
 
 const PlayerInfos = () => {
-    // const socket = useContext(SocketContext);
-    // const [playerInfos, setPlayerInfos] = useState(0);
-
-    // useEffect(() => {
-    //     socket.on("game.timer", (data) => {
-    //         setPlayerInfos(data['playerInfos'])
-    //     });
-    // }, []);
-
     return (
         <View style={styles.playerInfosContainer}>
             <Image

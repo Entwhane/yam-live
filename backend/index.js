@@ -85,13 +85,11 @@ const rollDices = (game, botGame) => {
   game.gameState.deck.dices = GameService.dices.roll(game.gameState.deck.dices)
   game.gameState.deck.rollsCounter++;
 
-  // combinations management
   const dices = { ...game.gameState.deck.dices };
   const isDefi = false;
   const isSec = game.gameState.deck.rollsCounter === 2;
   const combinations = GameService.choices.findCombinations(dices, isDefi, isSec);
 
-  // we affect changes to gameState
   game.gameState.choices.availableChoices = combinations;
 
   if (game.gameState.deck.rollsCounter > game.gameState.deck.rollsMaximum) {
@@ -189,10 +187,6 @@ const createGame = (player1Socket, player2Socket) => {
 
   games.push({ ...newGame });
   // games.push(JSON.parse(JSON.stringify(newGame)));
-
-  // console.log(games);
-  console.log('##########');
-  // console.log(newGame);
 
   const gameIndex = GameService.utils.findGameIndexById(games, newGame.idGame);
 
@@ -303,7 +297,7 @@ const createBotGame = (playerSocket) => {
 
       const choices = GameService.choices.findCombinations(games[gameIndex].gameState.deck.dices, false, games[gameIndex].gameState.deck.rollsCounter === 2);
       const randomChoice = choices[Math.floor(Math.random() * choices.length)];
-      
+
       setTimeout(() => {
         const similarIds = GameService.utils.findSimilarDiceIds(games[gameIndex].gameState.deck.dices)
         similarIds.forEach((idDice) => {
@@ -338,6 +332,16 @@ const createBotGame = (playerSocket) => {
   updateClientsViewPawns(games[gameIndex], true);
   updateClientsViewGrid(games[gameIndex], true);
   updateClientsViewDecks(games[gameIndex], true);
+
+  playerSocket.on('game.grid.selected', () => {
+    if (games[gameIndex].gameState.winner) {
+      clearInterval(gameInterval)
+    }
+  });
+
+  playerSocket.on('disconnect', () => {
+    clearInterval(gameInterval);
+  });
 };
 
 // ---------------------------------------

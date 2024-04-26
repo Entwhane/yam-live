@@ -555,7 +555,7 @@ const GameService = {
                 for (let i = 0; i < dices.length; i++) {
                     if (dices[i] !== dice) {
                         if (dices[i].value === valueToSearch) {
-                            if (!dicesWithSimilarValue.includes(arrdices[i].id)) {
+                            if (!dicesWithSimilarValue.includes(dices[i].id)) {
                                 dicesWithSimilarValue.push(dices[i].id);
                             }
                         }
