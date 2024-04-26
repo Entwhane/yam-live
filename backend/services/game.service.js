@@ -93,7 +93,6 @@ const GameService = {
     init: {
         gameState: () => {
             const game = { ...GAME_INIT };
-            // console.log(game);
             game['gameState']['timer'] = TURN_DURATION;
             game['gameState']['deck'] = { ...DECK_INIT };
             game['gameState']['choices'] = { ...CHOICES_INIT };

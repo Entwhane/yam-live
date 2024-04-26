@@ -120,7 +120,11 @@ const rollDices = (game, botGame) => {
 const lockDice = (game, idDice, botGame) => {
   const indexDice = GameService.utils.findDiceIndexByDiceId(game.gameState.deck.dices, idDice)
   if (botGame) {
-    game.gameState.deck.dices[indexDice].locked = true
+    if (game.gameState.currentTurn === 'player:2') {
+      game.gameState.deck.dices[indexDice].locked = true
+    } else {
+      game.gameState.deck.dices[indexDice].locked = game.gameState.deck.dices[indexDice].locked === true ? false : true
+    }
   } else {
     game.gameState.deck.dices[indexDice].locked = game.gameState.deck.dices[indexDice].locked === true ? false : true
   }
