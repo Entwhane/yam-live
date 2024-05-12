@@ -6,7 +6,7 @@ Yam Master est une application mobile développée en React Native qui permet au
 
 - **Jeu de dés Yam Master:** Jouez au jeu de dés Yam Master sur votre appareil mobile, avec la possibilité de jouer en ligne ou contre l'ordinateur.
   
-- **Interface intuitive:** Une interface utilisateur optimisé pour mobile et conviviale qui rend le jeu facile à comprendre et à jouer, même pour les nouveaux utilisateurs.
+- **Interface intuitive:** Une interface utilisateur optimisé pour mobile et conviviale qui rend le jeu facile à comprendre et à jouer, même pour les nouveaux utilisateurs avec un design inspiré du site n°1 d'échec au monde
   
 
 ## Technologies utilisées

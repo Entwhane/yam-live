@@ -33,7 +33,7 @@ function App() {
           }}>
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="OnlineGameScreen" component={OnlineGameScreen} options={{title: 'Retour' }} />
-          <Stack.Screen name="VsBotGameScreen" component={VsBotGameScreen} />
+          <Stack.Screen name="VsBotGameScreen" component={VsBotGameScreen} options={{title: 'Retour' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </SocketContext.Provider>
