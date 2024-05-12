@@ -10,20 +10,6 @@ const GameService = require('./services/game.service');
 let games = [];
 let queue = [];
 
-// if ('yam') {
-// } else if ('suite') {
-// } else if ('full') {
-// } else if ('carre') {
-// } else if ('sec') {
-// } else if ('defi') {
-// } else if ('moinshuit') {
-// } else if ('brelan6') {
-// } else if ('brelan5') {
-// } else if ('brelan4') {
-// } else if ('brelan3') {
-// } else if ('brelan2') {
-// } else if ('brelan1') {
-// }
 
 // ---------------------------------
 // -------- VIEWS METHODS -----------
@@ -119,14 +105,13 @@ const rollDices = (game, botGame) => {
 
 const lockDice = (game, idDice, botGame) => {
   const indexDice = GameService.utils.findDiceIndexByDiceId(game.gameState.deck.dices, idDice)
-  if (botGame) {
-    if (game.gameState.currentTurn === 'player:2') {
-      game.gameState.deck.dices[indexDice].locked = true
-    } else {
-      game.gameState.deck.dices[indexDice].locked = game.gameState.deck.dices[indexDice].locked === true ? false : true
-    }
+  const currentTurn = game.gameState.currentTurn;
+  const dice = game.gameState.deck.dices[indexDice];
+
+  if (botGame && currentTurn === 'player:2') {
+    dice.locked = true;
   } else {
-    game.gameState.deck.dices[indexDice].locked = game.gameState.deck.dices[indexDice].locked === true ? false : true
+    dice.locked = !dice.locked;
   }
   updateClientsViewDecks(game, botGame)
 }
@@ -308,6 +293,7 @@ const createBotGame = (playerSocket) => {
     updateClientsViewTimers(game, botGame);
   }, 1000);
 
+  // Gère le tour du bot
   const botInterval = setInterval(() => {
     if (game.gameState.currentTurn == 'player:2' && game.gameState.deck.rollsCounter <= game.gameState.deck.rollsMaximum) {
 
